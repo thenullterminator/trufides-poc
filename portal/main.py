@@ -1,11 +1,15 @@
 import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
+from langchain.schema.messages import HumanMessage, SystemMessage
+from datetime import datetime
 from io import BytesIO
 import base64
 import fitz
 import json
 
+def encode_image(file):
+     return base64.b64encode(file.read()).decode('utf-8')
 
 def extract_text_from_pdf(file):
 
@@ -24,40 +28,68 @@ def extract_text_from_pdf(file):
 
 # Function to call the LLM API (assuming a placeholder endpoint)
 def call_llm_api(document, criteria, document_type):
-     print(document)
-     print(criteria)
-
-     prompt = ChatPromptTemplate.from_messages([
-          ("system", 
-          """
-               You are a document validation assistant. Given the criteria: "{criteria}", validate the following base64 encoded PDF document and return a JSON response indicating if the document is valid or not, and a message explaining the result.
 
 
-               Document Type: {document_type}
+     system_message = SystemMessage(content=f"""
+          You are a document validation assistant. Given the criteria, validate the given document (image / pdf) and return a JSON response indicating if the document is valid or not, and a message explaining the result.
+          
+          Example outputs:
+          1. For a valid document: 
+          {{"status": "Valid","message": "The document meets all the specified criteria."}}
+          2. For an invalid document: 
+          {{"status": "Invalid","message": "The document does not meet the following criteria: [explain the issues]."}}
 
-               Document Text: {document_text}
+          DO NOT RETURN ANYTHING EXCEPT FOR THE JSON OUTPUT.
+          
+          INCASE YOU NEED TODAY'S DATE {datetime.today().strftime("%d-%m-%Y")}
+     """)
+
+     human_message = None
+
+     if document.type.startswith("image"):
+
+          image = encode_image(document)
+
+          human_message = HumanMessage(content = [
+               {
+                    "type": "text", 
+                    "text": f"""
+                    Validate the following document:
+
+                         Criteria: {criteria}
+                         
+                         Document Type: {document_type}
+                         
+                         Given document is an image encoded in base 64
+                    """
+               },
+               {
+                    "type": "image_url",
+                    "image_url": {
+                         "url": f"data:image/jpeg;base64,{image}"
+                    },
+               },
+          ])
+     else:
+          document_text = extract_text_from_pdf(document)
+
+          human_message = HumanMessage(content = f"""
+
+               Validate the following document:
+
+               Criteria: {criteria}
                
-               Example outputs:
-               1. For a valid document: 
-               {{"status": "Valid","message": "The document meets all the specified criteria."}}
-               2. For an invalid document: 
-               {{"status": "Invalid","message": "The document does not meet the following criteria: [explain the issues]."}}
-
-               DO NOT RETURN ANYTHING EXCEPT FOR THE JSON OUTPUT.
+               Document Type: {document_type}
+               
+               Document Text extracted from pdf: {document_text}
           """)
+
+     llm  = ChatOpenAI(model="gpt-4o", temperature=0)
+
+     response = llm.invoke([
+          system_message,
+          human_message
      ])
-
-     llm  = ChatOpenAI(model="gpt-4", temperature=0)
-
-     chain = prompt | llm
-
-     document_text = extract_text_from_pdf(document)
-
-     response = chain.invoke({
-          "document_text": document_text,
-          "criteria": criteria,
-          "document_type": document_type
-     })
 
      print(f"LLM Response: ", response.content)
 
@@ -105,7 +137,15 @@ if len(st.session_state.document_requirements) > 0:
      for idx, requirement in enumerate(st.session_state.document_requirements):
           st.write(f"### Document {idx + 1}: {requirement['type']}")
           st.write(f"Criteria: {requirement['criteria']}")
-          uploaded_file = st.file_uploader(f"Upload {requirement['type']}", type=["pdf"], key=f"file_{idx}")
+
+          file_format_supported = []
+
+          if(requirement['type'] in ['Passport', 'Aadhar card']):
+               file_format_supported = ['png', 'jpg']
+          else:
+               file_format_supported = ['pdf']
+
+          uploaded_file = st.file_uploader(f"Upload {requirement['type']}", type=file_format_supported, key=f"file_{idx}")
 
           # Update the session state with uploaded file
           if uploaded_file:
