@@ -47,4 +47,4 @@ def get_sanction_data(business_name, jurisdiction):
      # Return the best match if found, otherwise return an empty list
      return best_match if best_match else None
 
-print(get_sanction_data("airbnb", "united states"))
+# print(get_sanction_data("Citi", "India"))
