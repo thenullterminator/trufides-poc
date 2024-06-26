@@ -15,6 +15,7 @@ pymupdf = "*"
 pandas = "*"
 reportlab = "*"
 langchain = "*"
+numpy = "*"
 
 [dev-packages]
 
