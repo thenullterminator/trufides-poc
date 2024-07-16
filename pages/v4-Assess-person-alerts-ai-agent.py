@@ -17,9 +17,9 @@ data = {
 }
 
 open_source_info = {
-     "Inderjeet Singh": {"google_news":None, "linkedin":{"description":"Computer Science Student at IIT KGP (2022-2026), India", "link":"https://www.linkedin.com/in/devang-singhi/"}},
-     "Robert W. Lewise": {"google_news":{"description":"Big Shock:Branch Manager, 54 charged for committing 15 million USD fraud at Silicon Valley Bank", "link":"https://www.business-standard.com/world-news/year-after-silicon-valley-bank-crisis-a-struggle-over-what-needs-to-change-124031000694_1.html"}, "linkedin":{"description":"Branch Manager, Silicon Valley Bank, San Jose, United States", "link":"https://www.linkedin.com/in/devang-singhi/"}},
-     "Michelle Bouvard": {"google_news":None, "linkedin":{"description":"Professor, International School of Nice, France", "link":"https://www.linkedin.com/in/devang-singhi/"}},
+     "Inderjeet Singh": {"google_news":None, "linkedin":{"description":"Student at Chandigarh University(2022-2026), India", "link":"https://www.linkedin.com/in/inderjeet-singh-a68857250/"}},
+     "Robert W. Lewise": {"google_news":{"description":"Big Shock:Branch Manager, 54 charged for committing 15 million USD fraud at Silicon Valley Bank", "link":"https://www.business-standard.com/world-news/year-after-silicon-valley-bank-crisis-a-struggle-over-what-needs-to-change-124031000694_1.html"}, "linkedin":{"description":"Branch Manager, Silicon Valley Bank, San Jose, United States", "link":"https://www.linkedin.com/in/robertwlewis/"}},
+     "Michelle Bouvard": {"google_news":None, "linkedin":{"description":"Business and Systems Support Manager - Nationwide Group", "link":"https://www.linkedin.com/in/michelle-bouvard-0685a4199/"}},
 }
 
 
