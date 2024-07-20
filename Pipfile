@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 langchain-google-genai = "*"
 pillow = "*"
-install = "*"
 streamlit = "*"
 python-dotenv = "*"
 beautifulsoup4 = "*"
