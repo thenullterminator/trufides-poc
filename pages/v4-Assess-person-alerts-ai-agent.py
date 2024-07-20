@@ -30,7 +30,7 @@ df = pd.DataFrame(data)
 # Placeholder for the data
 risk_status_options = ["Medium", "Medium", "Low"]
 
-st.title("Alert raised for following Customers")
+st.title("Alert raised for following Customers!!")
 
 
 
